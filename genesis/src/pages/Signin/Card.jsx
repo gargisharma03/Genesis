@@ -1,15 +1,55 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function Card1({type}) {
     const isLogin =type==="login";
+    const [username,setUsername]=useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Submitting details:", { email, password });
+
+        try {
+
+            if (isLogin) {
+
+                const res = await axios.post(
+                    "http://localhost:5000/api/auth/login",
+                    {
+                        email,
+                        password,
+                    }
+                );
+                localStorage.setItem("token", res.data.token);
+
+                navigate("/dashboard");
+
+                console.log(res.data);
+
+            } else {
+
+                const res = await axios.post(
+                    "http://localhost:5000/api/auth/signin",
+                    {
+                        username,
+                        email,
+                        password,
+                    }
+                );
+                localStorage.setItem("token", res.data.token);
+
+                navigate("/dashboard");
+
+                console.log(res.data);
+
+            }
+
+        } catch (err) {
+            console.error(err.response?.data || err.message);
+        }
     };
 
     return (
@@ -27,6 +67,25 @@ export default function Card1({type}) {
 
             {/* Form Section */}
             <form onSubmit={handleSubmit} className="w-full flex flex-col items-center space-y-6">
+                {!isLogin && (
+                    <div className="w-full flex flex-col gap-2 max-w-sm">
+                        <label
+                            htmlFor="username"
+                            className="text-[11px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 pl-2"
+                        >
+                            Username
+                        </label>
+
+                        <input
+                            id="username"
+                            type="text"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            required
+                            className="w-full px-5 py-3 rounded-full bg-zinc-100 dark:bg-zinc-900/50 border border-zinc-300 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-fuchsia-500 focus:ring-1 focus:ring-fuchsia-500 transition-all duration-200 text-sm"
+                        />
+                    </div>
+                )}
                 
                 {/* Email Input Field */}
                 <div className="w-full flex flex-col gap-2 max-w-sm">
