@@ -37,7 +37,7 @@ export default function Hero() {
                 
                 {/* CTA Interaction Layer */}
                 <div className="mt-8 md:mt-10 flex justify-center md:justify-start w-full">
-                    <LiftButton onClick={() => navigate("/signin")}>
+                    <LiftButton onClick={() => navigate("/register")}>
                         GET STARTED
                         <svg
                             viewBox="0 0 24 24"

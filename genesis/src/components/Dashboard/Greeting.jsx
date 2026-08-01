@@ -6,8 +6,10 @@ export default function Greeting() {
 
     return (
         <>
-            <h1 className="text-5xl font-bold">
-                {getGreeting()}, {user?.username}
+            <h1 className="text-5xl font-medium font-serif ">
+                <h1>
+                {getGreeting()}, {user?.name?.split(" ")[0]}
+                </h1>
             </h1>
 
             

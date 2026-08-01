@@ -1,9 +1,9 @@
 import User from "../models/user.model.js";
 import generateToken from "../utils/generateToken.js";
 
-export const signin = async(req,res)=>{
+export const register = async(req,res)=>{
 
-    const {username,email,password}=req.body;
+    const {username,name,email,password}=req.body;
 
     const userExists=await User.findOne({email});
 
@@ -15,6 +15,7 @@ export const signin = async(req,res)=>{
 
     const user=await User.create({
         username,
+        name,
         email,
         password
     });
@@ -23,7 +24,7 @@ export const signin = async(req,res)=>{
 
     res.status(201).json({
         token,
-        user
+        user: user.getPublicProfile(),
     });
 
 }
@@ -32,7 +33,7 @@ export const login=async(req,res)=>{
 
     const {email,password}=req.body;
 
-    const user=await User.findOne({email});
+    const user = await User.findOne({ email }).select("+password");
 
     if(!user){
         return res.status(404).json({
@@ -40,7 +41,7 @@ export const login=async(req,res)=>{
         });
     }
 
-    const isMatch=await user.matchPassword(password);
+    const isMatch=await user.comparePassword(password);
 
     if(!isMatch){
         return res.status(401).json({
@@ -52,7 +53,7 @@ export const login=async(req,res)=>{
 
     res.json({
         token,
-        user
+        user: user.getPublicProfile(),
     });
 
 }

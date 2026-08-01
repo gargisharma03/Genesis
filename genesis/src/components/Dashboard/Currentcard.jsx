@@ -8,11 +8,11 @@ export default function Currentcard() {
   return (
     <section className="mb-12 items-center">
 
-      <h3 className="uppercase tracking-[0.2em] text-sm font-semibold text-zinc-400 mb-6">
-        Continue Working
+      <h3 className="uppercase tracking-[0.2em] text-sm font-semibold text-zinc-400 mb-6 mt-24">
+        YOUR WORKSPACES
       </h3>
 
-      <div className="w-full bg-white border border-zinc-200 rounded-[32px] p-8 flex justify-between items-center">
+      <div className="w-xl bg-white border border-zinc-200 rounded-[32px] p-8 grid justify-between items-center">
 
         {/* Left */}
 
@@ -48,11 +48,7 @@ export default function Currentcard() {
 
             <div className="flex items-center gap-3 mb-4">
 
-              <span className="px-3 py-1 rounded-md bg-indigo-50 text-indigo-600 text-xs font-semibold">
-
-                ACTIVE PROJECT
-
-              </span>
+              
 
               <div className="flex items-center gap-2 text-zinc-400 text-sm">
 
@@ -70,7 +66,7 @@ export default function Currentcard() {
 
             </h2>
 
-            <p className="mt-4 text-zinc-500 leading-8 text-sm">
+            <p className="mt-4 text-zinc-500  text-sm">
 
               Comparative analysis of transformer-based models
               and their efficiency in low-resource computational

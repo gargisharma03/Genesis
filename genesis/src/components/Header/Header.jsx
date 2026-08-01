@@ -20,7 +20,7 @@ export default function Layout() {
     { name: "Home", path: "/" },
     { name: "About", path: "/about" },
     { name: "Services", path: "/services" },
-    { name: "Sign-In", path: "/signin" },
+    { name: "Register", path: "/register" },
     { name: "Login", path: "/login" },
   ];
 

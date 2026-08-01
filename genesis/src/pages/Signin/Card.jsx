@@ -4,6 +4,7 @@ import axios from "axios";
 
 export default function Card1({type}) {
     const isLogin =type==="login";
+    const[name,setName]=useState("");
     const [username,setUsername]=useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -24,6 +25,7 @@ export default function Card1({type}) {
                     }
                 );
                 localStorage.setItem("token", res.data.token);
+                localStorage.setItem("user", JSON.stringify(res.data.user));
 
                 navigate("/dashboard");
 
@@ -32,14 +34,16 @@ export default function Card1({type}) {
             } else {
 
                 const res = await axios.post(
-                    "http://localhost:5000/api/auth/signin",
+                    "http://localhost:5000/api/auth/register",
                     {
+                        name,
                         username,
                         email,
                         password,
                     }
                 );
                 localStorage.setItem("token", res.data.token);
+                localStorage.setItem("user", JSON.stringify(res.data.user));
 
                 navigate("/dashboard");
 
@@ -81,6 +85,22 @@ export default function Card1({type}) {
                             type="text"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
+                            required
+                            className="w-full px-5 py-3 rounded-full bg-zinc-100 dark:bg-zinc-900/50 border border-zinc-300 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-fuchsia-500 focus:ring-1 focus:ring-fuchsia-500 transition-all duration-200 text-sm"
+                        />
+
+                        <label
+                            htmlFor="name"
+                            className="text-[11px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 pl-2"
+                        >
+                            Full Name
+                        </label>
+
+                        <input
+                            id="name"
+                            type="text"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
                             required
                             className="w-full px-5 py-3 rounded-full bg-zinc-100 dark:bg-zinc-900/50 border border-zinc-300 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-fuchsia-500 focus:ring-1 focus:ring-fuchsia-500 transition-all duration-200 text-sm"
                         />
@@ -148,7 +168,7 @@ export default function Card1({type}) {
                     <button
                         className="text-fuchsia-500 dark:text-fuchsia-400 font-medium hover:underline cursor-pointer bg-transparent border-none"
                         type="button"
-                        onClick={() => navigate(isLogin ? "/signin" : "/login")}
+                        onClick={() => navigate(isLogin ? "/register" : "/login")}
                     >
                         {isLogin ? "Sign Up" : "Log In"}
                     </button>

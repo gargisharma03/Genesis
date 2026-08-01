@@ -3,7 +3,7 @@ import Workspace from "./Workspace.jsx";
 import Currentcard from "../../components/Dashboard/Currentcard.jsx";
 export default function Dashboard() {
     return (
-        <div >
+        <div>
 
             <Workspace />
             <Currentcard />

@@ -63,3 +63,5 @@ dump.pm2
 
 # Testing
 jest-html-reporters-*
+
+temp/*
