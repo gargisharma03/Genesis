@@ -1,16 +1,19 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Home from './pages/Home/Home.jsx';
-import Layout from './Landinglayout.jsx';
-import Landing from './pages/Landing/Landing.jsx';
-import SignIn from './pages/Signin/SignIn.jsx';
-import Login from './pages/Signin/Login.jsx';
-import Dashboard from './pages/Dashboard/Dashboard.jsx';
-import AppLayout from './Applayout.jsx';
 
+import "./index.css";
+
+import Layout from "./Landinglayout.jsx";
+import AppLayout from "./Applayout.jsx";
+
+import Landing from "./pages/Landing/Landing.jsx";
+import SignIn from "./pages/Signin/SignIn.jsx";
+import Login from "./pages/Signin/Login.jsx";
+import Dashboard from "./pages/Dashboard/Dashboard.jsx";
+import Workspace from "./pages/Workspace/workspace.jsx";
+
+import { AuthProvider } from "./contexts/authcontext.jsx";
 
 const router = createBrowserRouter([
   {
@@ -22,14 +25,13 @@ const router = createBrowserRouter([
         element: <Landing />,
       },
       {
-        path: "/register", 
+        path: "/register",
         element: <SignIn />,
       },
       {
-        path: "/login", 
+        path: "/login",
         element: <Login />,
       },
-      
     ],
   },
   {
@@ -39,12 +41,18 @@ const router = createBrowserRouter([
         path: "/dashboard",
         element: <Dashboard />,
       },
+      {
+        path: "/workspaces/:workspaceId",
+        element: <Workspace />,
+      },
     ],
   },
 ]);
 
-createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router} />
-  </StrictMode>,
-)
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
+  </StrictMode>
+);

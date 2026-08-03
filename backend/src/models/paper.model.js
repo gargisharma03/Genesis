@@ -36,7 +36,7 @@ const paperSchema = new mongoose.Schema(
       trim: true,
     },
 
-    venue: {
+    publication: {
       type: String,
       default: "",
       trim: true,
@@ -67,6 +67,16 @@ const paperSchema = new mongoose.Schema(
       trim: true,
     },
 
+    pdfUrl: {
+      type: String,
+      required: true,
+    },
+
+    pdfPublicId: {
+      type: String,
+      required: true,
+    },
+
     source: {
       type: String,
       enum: ["upload", "doi", "arxiv", "url"],
@@ -87,7 +97,11 @@ const paperSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ["active", "archived", "deleted"],
+      enum: ["uploading",
+      "processing",
+      "ready",
+      "failed",
+      "archived",],
       default: "active",
     },
 
@@ -142,6 +156,7 @@ paperSchema.index({
   authors: "text",
   keywords: "text",
 });
+
 
 /* ===========================
    EXPORT

@@ -1,4 +1,8 @@
 import mongoose from "mongoose";
+import slugify from "slugify";
+import crypto from "crypto";
+
+
 
 const workspaceSchema = new mongoose.Schema(
   {
@@ -24,7 +28,7 @@ const workspaceSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      index: true,
+
     },
 
     members: [
@@ -81,11 +85,43 @@ const workspaceSchema = new mongoose.Schema(
         trim: true,
       },
     ],
+    slug: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
+    inviteCode: {
+        type: String,
+        unique: true,
+        index: true,
+    },
+
+
   },
   {
     timestamps: true,
   }
 );
+
+workspaceSchema.pre("validate", async function () {
+
+    if (!this.slug && this.name) {
+        this.slug = slugify(this.name, {
+            lower: true,
+            strict: true,
+        });
+    }
+
+    if (!this.inviteCode) {
+        this.inviteCode = crypto
+            .randomBytes(4)
+            .toString("hex")
+            .toUpperCase();
+    }
+
+});
 
 workspaceSchema.index({
   owner: 1,
@@ -96,5 +132,7 @@ workspaceSchema.index({
   name: "text",
   description: "text",
 });
+
+
 
 export default mongoose.model("Workspace", workspaceSchema);

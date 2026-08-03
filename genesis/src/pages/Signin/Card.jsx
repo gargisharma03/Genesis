@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useAuth } from "../../contexts/authcontext";
 
 export default function Card1({type}) {
     const isLogin =type==="login";
@@ -9,6 +10,7 @@ export default function Card1({type}) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
+    const { fetchUser } = useAuth();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -25,7 +27,8 @@ export default function Card1({type}) {
                     }
                 );
                 localStorage.setItem("token", res.data.token);
-                localStorage.setItem("user", JSON.stringify(res.data.user));
+
+                await fetchUser();
 
                 navigate("/dashboard");
 
@@ -43,7 +46,8 @@ export default function Card1({type}) {
                     }
                 );
                 localStorage.setItem("token", res.data.token);
-                localStorage.setItem("user", JSON.stringify(res.data.user));
+
+                await fetchUser();
 
                 navigate("/dashboard");
 

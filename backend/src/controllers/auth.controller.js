@@ -30,10 +30,16 @@ export const register = async(req,res)=>{
 }
 
 export const login=async(req,res)=>{
+    console.log("BODY:", req.body);
 
-    const {email,password}=req.body;
+    const { email, password } = req.body;
+
+    console.log("EMAIL:", email);
 
     const user = await User.findOne({ email }).select("+password");
+
+    console.log("USER:", user);
+
 
     if(!user){
         return res.status(404).json({
@@ -57,3 +63,11 @@ export const login=async(req,res)=>{
     });
 
 }
+
+export const getCurrentUser = async (req, res) => {
+  res.status(200).json({
+    success: true,
+    user: req.user,
+    lastWorkspace: req.user.lastWorkspace,
+  });
+};
