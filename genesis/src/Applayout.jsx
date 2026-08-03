@@ -6,7 +6,7 @@ import Navbar from "./pages/Dashboard/Navbar";
 
 export default function AppLayout() {
 
-    const [collapsed, setCollapsed] = useState(false);
+    const [collapsed, setCollapsed] = useState(true);
 
     return (
 

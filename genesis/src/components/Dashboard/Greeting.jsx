@@ -1,18 +1,12 @@
-import getGreeting from "../../../../backend/src/utils/getGreeting";
+import { useAuth } from "../../contexts/authcontext";
+import getGreeting from "../Dashboard/getGreeting";
 
 export default function Greeting() {
-
-    const user = JSON.parse(localStorage.getItem("user"));
+    const { user } = useAuth();
 
     return (
-        <>
-            <h1 className="text-5xl font-medium font-serif ">
-                <h1>
-                {getGreeting()}, {user?.name?.split(" ")[0]}
-                </h1>
-            </h1>
-
-            
-        </>
+        <h1 className="text-5xl font-medium font-serif">
+            {getGreeting()}, {user?.name?.split(" ")[0]}
+        </h1>
     );
 }

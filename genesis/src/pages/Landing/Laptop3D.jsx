@@ -13,8 +13,8 @@ export default function Laptop3DImage() {
     const y = (e.clientY - box.top) / box.height - 0.5;
 
     gsap.to(card, {
-      rotateY: x * 20, // Max 30 deg rotation on Y-axis
-      rotateX: -y * 30, // Max 30 deg rotation on X-axis
+      rotateY: x * 20, 
+      rotateX: -y * 30, 
       duration: 0.3,
       ease: "power2.out",
       transformPerspective: 800, // Provides the depth factor
@@ -42,12 +42,12 @@ export default function Laptop3DImage() {
         >
           {/* Base image element layer */}
           <img
-            src="/src/assets/hero.png" // Replace with your target image path
+            src="/src/assets/dashboardmock.png"
             alt="3D Visualization"
             className="h-full w-full object-cover transition-scale duration-500 group-hover:scale-105 select-none pointer-events-none"
           />
 
-          {/* Optional Glassmorphic overlay card inside the 3D space */}
+          
           <div className="absolute inset-0 flex flex-col justify-end p-6 bg-gradient-to-t from-black/80 via-black/20 to-transparent [transform:translateZ(40px)]">
             <h3 className="text-2xl font-bold text-white tracking-wide">
               Neural Grid

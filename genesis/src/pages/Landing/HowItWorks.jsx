@@ -5,7 +5,7 @@ export default function HowItWorks() {
       title: "Ingress & Ingestion",
       tagline: "Initialize Localized Architecture",
       description: "Create an individual or team node workspace. Genesis instantly establishes secure database storage with Row-Level Security (RLS) rules and provisions standalone vector indexes for your group.",
-      // FIX: Write out the complete, absolute Tailwind utilities explicitly
+      
       badgeBg: "bg-gradient-to-br from-fuchsia-500 to-purple-600",
       lineBg: "bg-gradient-to-r from-fuchsia-500 to-purple-600"
     },
