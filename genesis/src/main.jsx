@@ -5,13 +5,14 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 
 import Layout from "./Landinglayout.jsx";
-import AppLayout from "./Applayout.jsx";
+import AppLayout from "./Dashboardlayout.jsx";
 
 import Landing from "./pages/Landing/Landing.jsx";
 import SignIn from "./pages/Signin/SignIn.jsx";
 import Login from "./pages/Signin/Login.jsx";
 import Dashboard from "./pages/Dashboard/Dashboard.jsx";
 import Workspace from "./pages/Workspace/workspace.jsx";
+import WorkspaceLayout from "./WorkspaceLayout.jsx";
 
 import { AuthProvider } from "./contexts/authcontext.jsx";
 
@@ -41,12 +42,18 @@ const router = createBrowserRouter([
         path: "/dashboard",
         element: <Dashboard />,
       },
-      {
-        path: "/workspaces/:workspaceId",
-        element: <Workspace />,
-      },
+      
     ],
   },
+  {
+    element: <WorkspaceLayout />,
+    children: [
+        {
+            path: "/workspaces/:workspaceId",
+            element: <Workspace />,
+        },
+    ],
+},
 ]);
 
 createRoot(document.getElementById("root")).render(

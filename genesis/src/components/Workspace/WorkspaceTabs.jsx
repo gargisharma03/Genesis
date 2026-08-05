@@ -22,7 +22,7 @@ export default function WorkspaceTabs({
     setActiveTab
 }) {
     return (
-        <div className="flex gap-3 mt-10 border-b pb-4">
+        <div className="flex gap-3 mt-0 border-b pb-4">
 
             {tabs.map((tab) => (
 
@@ -30,11 +30,11 @@ export default function WorkspaceTabs({
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
                     className={`
-                        px-6 py-3 rounded-full transition
+                        px-6 py-3 rounded-xl transition
 
                         ${
                             activeTab === tab.id
-                                ? "bg-black text-white"
+                                ? "bg-fuchsia-500  text-white"
                                 : "hover:bg-zinc-100"
                         }
                     `}

@@ -1,55 +1,54 @@
-import {
-    Share2,
-    Settings,
-    UserPlus
-} from "lucide-react";
+import { Share2, Search, Settings } from "lucide-react";
 
-export default function WorkspaceHeader() {
-    return (
-        <div className="flex justify-between items-center">
+export default function WorkspaceHeader({ workspace, paperCount = 0 }) {
+  const count = paperCount ?? workspace?.papers?.length ?? 0;
 
-            <div>
+  return (
+    <header className="border-b border-zinc-200 bg-white">
+      <div className="px-10 py-8">
+        {/* Top Row */}
+        <div className="flex items-start justify-between">
+          <div>
+            <h1 className="text-3xl font-semibold tracking-tight text-zinc-900">
+              {workspace?.name || "Untitled Workspace"}
+            </h1>
 
-                <p className="uppercase tracking-[0.2em] text-xs text-zinc-400">
-                    Workspace
-                </p>
+            {(workspace?.description || count > 0) && (
+              <p className="mt-2 text-sm text-zinc-500">
+                {workspace?.description}
+                {workspace?.description && count > 0 ? " • " : ""}
+                {count > 0 && `${count} ${count === 1 ? "Paper" : "Papers"}`}
+              </p>
+            )}
+          </div>
 
-                <h1 className="text-4xl font-semibold mt-2">
-                    LLM Hallucination Research
-                </h1>
+          <div className="flex items-center gap-2">
+            <button 
+              type="button"
+              className="h-11 w-11 rounded-xl hover:bg-zinc-100 transition flex items-center justify-center text-zinc-600"
+              aria-label="Search workspace"
+            >
+              <Search size={18} />
+            </button>
 
-                <p className="text-zinc-500 mt-2">
-                    Updated 3 minutes ago
-                </p>
+            <button 
+              type="button"
+              className="h-11 w-11 rounded-xl hover:bg-zinc-100 transition flex items-center justify-center text-zinc-600"
+              aria-label="Workspace settings"
+            >
+              <Settings size={18} />
+            </button>
 
-            </div>
-
-            <div className="flex gap-3">
-
-                <button className="border px-5 py-3 rounded-xl flex gap-2 items-center hover:bg-zinc-100">
-
-                    <UserPlus size={18} />
-
-                    Invite
-
-                </button>
-
-                <button className="border px-5 py-3 rounded-xl flex gap-2 items-center hover:bg-zinc-100">
-
-                    <Share2 size={18} />
-
-                    Share
-
-                </button>
-
-                <button className="border p-3 rounded-xl hover:bg-zinc-100">
-
-                    <Settings size={18} />
-
-                </button>
-
-            </div>
-
+            <button 
+              type="button"
+              className="flex items-center gap-2 px-5 h-11 rounded-xl bg-black text-white hover:bg-zinc-800 transition text-sm font-medium"
+            >
+              <Share2 size={17} />
+              Share
+            </button>
+          </div>
         </div>
-    );
+      </div>
+    </header>
+  );
 }
