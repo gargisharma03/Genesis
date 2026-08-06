@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import userRouter from "./routes/user.routes.js";
 import workspaceRouter from "./routes/workspace.routes.js";
 import paperRouter from "./routes/paper.routes.js";
+import noteRouter from "./routes/note.routes.js";
 
 const app = express();
 
@@ -20,5 +21,9 @@ app.use(cookieParser());
 app.use("/api/auth", userRouter);
 app.use("/api/workspaces", workspaceRouter);
 app.use("/api/workspaces/:workspaceId/papers", paperRouter);
+app.use(
+    "/api/workspaces/:workspaceId/notes",
+    noteRouter
+);
 
 export { app };

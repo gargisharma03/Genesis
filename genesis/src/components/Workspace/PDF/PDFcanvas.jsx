@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useRef,useEffect } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 
 import "react-pdf/dist/Page/TextLayer.css";
@@ -9,7 +9,21 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
     import.meta.url
 ).toString();
 
-export default function PDFcanvas({ selectedPaper,viewerState,setViewerState }) {
+export default function PDFcanvas({ selectedPaper,viewerState,setViewerState,containerRef }) {
+    const pageRefs = useRef([]);
+    
+    const PDF_WIDTH = 850;
+    useEffect(() => {
+        const page =
+            pageRefs.current[viewerState.pageNumber - 1];
+
+        if (page) {
+            page.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+            });
+        }
+    }, [viewerState.pageNumber]);
     
 
     function onLoadSuccess({ numPages }) {
@@ -27,7 +41,7 @@ export default function PDFcanvas({ selectedPaper,viewerState,setViewerState }) 
     }
 
     return (
-        <div className="h-full overflow-y-auto bg-zinc-100 p-8">
+        <div ref={containerRef} className="h-full overflow-y-auto bg-zinc-100 p-8">
             <div className="flex flex-col items-center">
                 <Document
                     file={selectedPaper.pdfUrl}
@@ -38,11 +52,12 @@ export default function PDFcanvas({ selectedPaper,viewerState,setViewerState }) 
                     {Array.from(new Array(viewerState.numPages), (_, index) => (
                         <div
                             key={index}
+                            ref={(el) => (pageRefs.current[index] = el)}
                             className="mb-6 flex justify-center"
                         >
                             <Page
                                 pageNumber={index + 1}
-                                width={850 * viewerState.zoom}
+                                width={PDF_WIDTH * viewerState.zoom}
                             />
                         </div>
                     ))}

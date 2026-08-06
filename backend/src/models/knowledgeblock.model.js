@@ -2,9 +2,9 @@ import mongoose from 'mongoose';
 
 const knowledgeBlockSchema = new mongoose.Schema(
   {
-    page: {
+    note: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'NotebookPage',
+      ref: "Note",
       required: true,
       index: true,
     },
@@ -21,7 +21,18 @@ const knowledgeBlockSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ['text', 'evidence', 'sticky', 'drawing', 'image', 'url', 'equation', 'code', 'task'],
+      enum: [
+          "text",
+          "sticky",
+          "drawing",
+          "image",
+          "pdf-highlight",
+          "citation",
+          "equation",
+          "code",
+          "todo",
+          "ai-summary",
+      ],
       required: true,
     },
     title: {
@@ -39,15 +50,40 @@ const knowledgeBlockSchema = new mongoose.Schema(
     size: {
       width: { type: Number, default: 200 },
       height: { type: Number, default: 150 },
+      collapsed:{
+          type:Boolean,
+          default:false,
+      },
     },
-    style: {
-      type: mongoose.Schema.Types.Mixed,
-      default: {},
+    style:{
+        color:{
+            type:String,
+            default:"#FFF9A6"
+        },
+
+        background:{
+            type:String,
+            default:"#FFFFFF"
+        },
+
+        opacity:{
+            type:Number,
+            default:1
+        },
+
+        fontSize:{
+            type:Number,
+            default:16
+        }
     },
     linkedPaper: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Paper',
       default: null,
+    },
+    linkedPage: {
+        type: Number,
+        default: null,
     },
     linkedAnnotation: {
       type: mongoose.Schema.Types.ObjectId,
@@ -63,6 +99,19 @@ const knowledgeBlockSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'PaperAnalysis',
       default: null,
+    },
+    lastEditedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+    },
+    order: {
+        type: Number,
+        default: 0,
+    },
+    isArchived:{
+        type:Boolean,
+        default:false,
     },
     tags: [
       {
