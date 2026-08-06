@@ -13,6 +13,7 @@ import {
 import authMiddleware from "../middlewares/auth.middleware.js";
 import workspaceMiddleware from "../middlewares/workspace.middleware.js";
 import { noteMiddleware } from "../middlewares/note.middleware.js";
+import knowledgeBlockRoutes from "./knowledgeblock.routes.js";
 
 const router = Router({mergeParams: true});
 
@@ -67,6 +68,11 @@ router.patch(
     authMiddleware,
     noteMiddleware,
     archiveNote
+);
+
+router.use(
+    "/:noteId/blocks",
+    knowledgeBlockRoutes
 );
 
 export default router;

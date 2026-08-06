@@ -124,4 +124,8 @@ const knowledgeBlockSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const KnowledgeBlock = mongoose.model('KnowledgeBlock', knowledgeBlockSchema);
+const KnowledgeBlock =
+    mongoose.models.KnowledgeBlock ||
+    mongoose.model("KnowledgeBlock", knowledgeBlockSchema);
+
+export default KnowledgeBlock;

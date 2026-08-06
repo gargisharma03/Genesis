@@ -1,5 +1,5 @@
 import Note from "../models/note.model.js";
-import {KnowledgeBlock} from "../models/knowledgeblock.model.js";
+import KnowledgeBlock from "../models/knowledgeblock.model.js";
 
 
 
