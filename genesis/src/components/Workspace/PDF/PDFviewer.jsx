@@ -30,7 +30,7 @@ export default function PDFviewer({selectedPaper}){
     }
 
     return (
-        <div className="h-full flex flex-col rounded-2xl border bg-white">
+        <div className="flex h-full flex-col overflow-hidden rounded-2xl border bg-white">
 
             <PDFtoolbar
                 selectedPaper={selectedPaper}

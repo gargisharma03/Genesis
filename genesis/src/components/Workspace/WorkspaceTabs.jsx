@@ -22,7 +22,7 @@ export default function WorkspaceTabs({
     setActiveTab
 }) {
     return (
-        <div className="flex gap-3 mt-0 border-b pb-4">
+        <div className="flex gap-3 mt-0 border-b pb-4 align-center justify-start px-10">
 
             {tabs.map((tab) => (
 

@@ -77,7 +77,7 @@ export default function Workspace() {
   };
 
   return (
-    <div className="relative flex h-screen w-screen overflow-hidden bg-zinc-100 text-zinc-900 selection:bg-blue-100">
+    <div className="relative flex h-screen w-screen overflow-hidden bg-white text-zinc-900 selection:bg-blue-100">
       
       {/* 1. Outer App Sidebar — Hidden in Focus Mode */}
       {!isFocusMode && (
@@ -123,7 +123,7 @@ export default function Workspace() {
 
           {/* Core Viewing Canvas / Pane Shell */}
           <div className={`relative flex-1 min-h-0 rounded-xl border overflow-hidden ${
-            isFocusMode ? "border-zinc-800 bg-zinc-900 rounded-none border-0" : "border-zinc-200 bg-white shadow-sm"
+            isFocusMode ? "border-zinc-800 bg-white rounded-none border-0" : "border-zinc-200 bg-white shadow-sm"
           }`}>
 
             {/* Floating Exit Button — Visible ONLY in Focus Mode */}
@@ -159,7 +159,7 @@ export default function Workspace() {
                         </Panel>
 
                         {/* Draggable Divider Handle */}
-                        <Separator className="relative flex w-2 items-center justify-center bg-zinc-100 hover:bg-fuchsia-500 active:bg-fuchsia-600 transition-colors cursor-col-resize group z-10">
+                        <Separator className="relative flex w-2 items-center justify-center bg-white hover:bg-fuchsia-500 active:bg-fuchsia-600 transition-colors cursor-col-resize group z-10">
                         <div className="flex h-7 w-3 items-center justify-center rounded bg-zinc-300 group-hover:bg-fuchsia-600 text-white shadow-sm transition-colors">
                             <GripVertical className="h-3 w-3" />
                         </div>
@@ -167,7 +167,7 @@ export default function Workspace() {
 
                         {/* Right Pane */}
                         <Panel defaultSize={50} minSize={25} className="h-full min-w-0">
-                        <div className="h-full w-full overflow-auto bg-zinc-50/50">
+                        <div className="h-full w-full overflow-auto bg-white">
                             <ReadingView
                             selectedPaper={selectedPaper}
                             selectedNote={selectedNote}

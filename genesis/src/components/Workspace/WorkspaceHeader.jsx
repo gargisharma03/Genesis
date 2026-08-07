@@ -5,7 +5,7 @@ export default function WorkspaceHeader({ workspace, paperCount = 0 }) {
 
   return (
     <header className="border-b border-zinc-200 bg-white">
-      <div className="px-10 py-8">
+      <div className="px-10 py-5">
         {/* Top Row */}
         <div className="flex items-start justify-between">
           <div>
