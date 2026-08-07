@@ -11,61 +11,52 @@ import {
     updateBlock,
     moveBlock,
     deleteBlock,
+    batchUpdateBlocks,
+    duplicateBlock,
 } from "../controllers/knowledgeBlock.controller.js";
 
+// mergeParams: true allows access to :workspaceId and :noteId from parent routers
 const router = Router({ mergeParams: true });
 
-/* ==========================================
-   Block Collection
-========================================== */
+/* =====================================================
+   Global Router Middlewares
+   (Executes once for all block endpoints)
+===================================================== */
+router.use(verifyJWT, workspaceMiddleware, noteMiddleware);
+
+/* =====================================================
+   Block Collection Operations
+   Base path: /api/workspaces/:workspaceId/notes/:noteId/blocks
+===================================================== */
 
 router
     .route("/")
-    .post(
-        verifyJWT,
-        workspaceMiddleware,
-        noteMiddleware,
-        createBlock
-    )
-    .get(
-        verifyJWT,
-        workspaceMiddleware,
-        noteMiddleware,
-        getBlocks
-    );
+    .post(createBlock)
+    .get(getBlocks)
+    .patch(batchUpdateBlocks); // Batch update for multi-select canvas moves/resizes
 
-/* ==========================================
-   Individual Block
-========================================== */
+/* =====================================================
+   Individual Block Operations
+   Path: /api/workspaces/:workspaceId/notes/:noteId/blocks/:blockId
+===================================================== */
 
 router
     .route("/:blockId")
-    .patch(
-        verifyJWT,
-        workspaceMiddleware,
-        noteMiddleware,
-        knowledgeBlockMiddleware,
-        updateBlock
-    )
-    .delete(
-        verifyJWT,
-        workspaceMiddleware,
-        noteMiddleware,
-        knowledgeBlockMiddleware,
-        deleteBlock
-    );
+    .patch(knowledgeBlockMiddleware, updateBlock)
+    .delete(knowledgeBlockMiddleware, deleteBlock);
 
-/* ==========================================
-   Move / Resize
-========================================== */
-
+// Lightweight endpoint specifically for real-time drag/resize coordinates (x, y, z, width, height)
 router.patch(
     "/:blockId/position",
-    verifyJWT,
-    workspaceMiddleware,
-    noteMiddleware,
     knowledgeBlockMiddleware,
     moveBlock
+);
+
+// Duplicate / Clone Block
+router.post(
+    "/:blockId/duplicate",
+    knowledgeBlockMiddleware,
+    duplicateBlock
 );
 
 export default router;

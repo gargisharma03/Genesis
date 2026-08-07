@@ -3,22 +3,24 @@ import { Router } from "express";
 import {
     createNote,
     getWorkspaceNotes,
+    getPaperNotes,
     getNote,
     updateNote,
     pinNote,
     archiveNote,
     deleteNote,
+    getOrCreateBoard,
 } from "../controllers/note.controller.js";
 
 import authMiddleware from "../middlewares/auth.middleware.js";
 import workspaceMiddleware from "../middlewares/workspace.middleware.js";
-import { noteMiddleware } from "../middlewares/note.middleware.js";
-import knowledgeBlockRoutes from "./knowledgeblock.routes.js";
+import noteMiddleware from "../middlewares/note.middleware.js";
+import knowledgeBlockRoutes from "./knowledgeBlock.routes.js";
 
-const router = Router({mergeParams: true});
+const router = Router({ mergeParams: true });
 
 /* =====================================================
-   Workspace Routes
+   Root Collection Routes
 ===================================================== */
 
 router
@@ -31,19 +33,41 @@ router
     .get(
         authMiddleware,
         workspaceMiddleware,
-        getWorkspaceNotes
+        (req, res, next) => {
+            // Smart router dispatch based on mount path
+            if (req.params.paperId) {
+                return getPaperNotes(req, res, next);
+            }
+            return getWorkspaceNotes(req, res, next);
+        }
     );
 
 /* =====================================================
-   Note Routes
+   PDF Reading Mode Canvas Sync
+   Path: GET /api/workspaces/:workspaceId/papers/:paperId/notes/board
 ===================================================== */
+router.get(
+    "/board",
+    authMiddleware,
+    workspaceMiddleware,
+    getOrCreateBoard
+);
 
+/* =====================================================
+   Individual Note Routes
+   Path: /:noteId
+===================================================== */
 router
     .route("/:noteId")
     .get(
         authMiddleware,
         noteMiddleware,
         getNote
+    )
+    .put(
+        authMiddleware,
+        noteMiddleware,
+        updateNote
     )
     .patch(
         authMiddleware,
@@ -56,23 +80,12 @@ router
         deleteNote
     );
 
-router.patch(
-    "/:noteId/pin",
-    authMiddleware,
-    noteMiddleware,
-    pinNote
-);
+router.patch("/:noteId/pin", authMiddleware, noteMiddleware, pinNote);
+router.patch("/:noteId/archive", authMiddleware, noteMiddleware, archiveNote);
 
-router.patch(
-    "/:noteId/archive",
-    authMiddleware,
-    noteMiddleware,
-    archiveNote
-);
-
-router.use(
-    "/:noteId/blocks",
-    knowledgeBlockRoutes
-);
+/* =====================================================
+   Nested Knowledge Block Sub-router
+===================================================== */
+router.use("/:noteId/blocks", knowledgeBlockRoutes);
 
 export default router;

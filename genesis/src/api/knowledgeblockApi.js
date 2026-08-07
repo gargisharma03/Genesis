@@ -1,14 +1,26 @@
-import axiosInstance from "./axiosInstance";
+import api from "./axios";
+
+/* ===========================
+   Get or Create Paper Board
+=========================== */
+
+export const getOrCreatePaperBoard = (
+    workspaceId,
+    paperId
+) =>
+    api.get(
+        `/workspaces/${workspaceId}/papers/${paperId}/notes/board`
+    );
 
 /* ===========================
    Get blocks
 =========================== */
 
-export const getBlocks = (
+export const getKnowledgeBlocks = (
     workspaceId,
     noteId
 ) =>
-    axiosInstance.get(
+    api.get(
         `/workspaces/${workspaceId}/notes/${noteId}/blocks`
     );
 
@@ -16,12 +28,12 @@ export const getBlocks = (
    Create block
 =========================== */
 
-export const createBlock = (
+export const createKnowledgeBlock = (
     workspaceId,
     noteId,
     data
 ) =>
-    axiosInstance.post(
+    api.post(
         `/workspaces/${workspaceId}/notes/${noteId}/blocks`,
         data
     );
@@ -36,7 +48,7 @@ export const updateBlock = (
     blockId,
     data
 ) =>
-    axiosInstance.patch(
+    api.patch(
         `/workspaces/${workspaceId}/notes/${noteId}/blocks/${blockId}`,
         data
     );
@@ -51,7 +63,7 @@ export const moveBlock = (
     blockId,
     data
 ) =>
-    axiosInstance.patch(
+    api.patch(
         `/workspaces/${workspaceId}/notes/${noteId}/blocks/${blockId}/position`,
         data
     );
@@ -65,6 +77,6 @@ export const deleteBlock = (
     noteId,
     blockId
 ) =>
-    axiosInstance.delete(
+    api.delete(
         `/workspaces/${workspaceId}/notes/${noteId}/blocks/${blockId}`
     );

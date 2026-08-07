@@ -21,8 +21,16 @@ app.use(cookieParser());
 app.use("/api/auth", userRouter);
 app.use("/api/workspaces", workspaceRouter);
 app.use("/api/workspaces/:workspaceId/papers", paperRouter);
+
+// Workspace-scoped notes (general notes/whiteboards)
 app.use(
     "/api/workspaces/:workspaceId/notes",
+    noteRouter
+);
+
+// Paper-scoped notes (notes/canvases directly attached to a PDF)
+app.use(
+    "/api/workspaces/:workspaceId/papers/:paperId/notes",
     noteRouter
 );
 

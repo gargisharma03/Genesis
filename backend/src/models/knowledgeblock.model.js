@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const knowledgeBlockSchema = new mongoose.Schema(
   {
@@ -10,28 +10,34 @@ const knowledgeBlockSchema = new mongoose.Schema(
     },
     workspace: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Workspace',
+      ref: "Workspace",
       required: true,
       index: true,
     },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
+      required: true,
+    },
+    lastEditedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
     type: {
       type: String,
       enum: [
-          "text",
-          "sticky",
-          "drawing",
-          "image",
-          "pdf-highlight",
-          "citation",
-          "equation",
-          "code",
-          "todo",
-          "ai-summary",
+        "text",
+        "heading",
+        "paragraph",
+        "code",
+        "equation",
+        "citation",
+        "reference",
+        "todo",
+        "image",
+        "divider",
+        "ai-summary",
       ],
       required: true,
     },
@@ -40,7 +46,10 @@ const knowledgeBlockSchema = new mongoose.Schema(
       trim: true,
     },
     content: {
-      type: mongoose.Schema.Types.Mixed,
+      text: String,
+      code: String,
+      language: String,
+      latex: String,
     },
     position: {
       x: { type: Number, default: 0 },
@@ -50,68 +59,60 @@ const knowledgeBlockSchema = new mongoose.Schema(
     size: {
       width: { type: Number, default: 200 },
       height: { type: Number, default: 150 },
-      collapsed:{
-          type:Boolean,
-          default:false,
+      collapsed: {
+        type: Boolean,
+        default: false,
       },
     },
-    style:{
-        color:{
-            type:String,
-            default:"#FFF9A6"
-        },
-
-        background:{
-            type:String,
-            default:"#FFFFFF"
-        },
-
-        opacity:{
-            type:Number,
-            default:1
-        },
-
-        fontSize:{
-            type:Number,
-            default:16
-        }
+    style: {
+      color: {
+        type: String,
+        default: "#FFF9A6",
+      },
+      background: {
+        type: String,
+        default: "#FFFFFF",
+      },
+      opacity: {
+        type: Number,
+        default: 1,
+      },
+      fontSize: {
+        type: Number,
+        default: 16,
+      },
     },
     linkedPaper: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Paper',
+      ref: "Paper",
       default: null,
     },
     linkedPage: {
-        type: Number,
-        default: null,
+      type: Number,
+      default: null,
     },
     linkedAnnotation: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Annotation',
+      ref: "Annotation",
       default: null,
     },
     linkedCitation: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Citation',
+      ref: "Citation",
       default: null,
     },
     linkedAnalysis: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'PaperAnalysis',
+      ref: "PaperAnalysis",
       default: null,
     },
-    lastEditedBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
-    },
     order: {
-        type: Number,
-        default: 0,
+      type: Number,
+      default: 0,
     },
-    isArchived:{
-        type:Boolean,
-        default:false,
+    isArchived: {
+      type: Boolean,
+      default: false,
     },
     tags: [
       {
@@ -124,8 +125,12 @@ const knowledgeBlockSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// High-performance compound indexes for multiplayer canvas reads & updates
+knowledgeBlockSchema.index({ note: 1, isArchived: 1 });
+knowledgeBlockSchema.index({ workspace: 1, tags: 1 });
+
 const KnowledgeBlock =
-    mongoose.models.KnowledgeBlock ||
-    mongoose.model("KnowledgeBlock", knowledgeBlockSchema);
+  mongoose.models.KnowledgeBlock ||
+  mongoose.model("KnowledgeBlock", knowledgeBlockSchema);
 
 export default KnowledgeBlock;

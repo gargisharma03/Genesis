@@ -1,11 +1,11 @@
-import axiosInstance from "./axiosInstance";
+import api from "./axios";
 
 /* ===========================
    Get all notes
 =========================== */
 
 export const getWorkspaceNotes = (workspaceId) =>
-    axiosInstance.get(
+    api.get(
         `/workspaces/${workspaceId}/notes`
     );
 
@@ -14,7 +14,7 @@ export const getWorkspaceNotes = (workspaceId) =>
 =========================== */
 
 export const createNote = (workspaceId, data) =>
-    axiosInstance.post(
+    api.post(
         `/workspaces/${workspaceId}/notes`,
         data
     );
@@ -28,7 +28,7 @@ export const updateNote = (
     noteId,
     data
 ) =>
-    axiosInstance.patch(
+    api.patch(
         `/workspaces/${workspaceId}/notes/${noteId}`,
         data
     );
@@ -41,6 +41,6 @@ export const deleteNote = (
     workspaceId,
     noteId
 ) =>
-    axiosInstance.delete(
+    api.delete(
         `/workspaces/${workspaceId}/notes/${noteId}`
     );
