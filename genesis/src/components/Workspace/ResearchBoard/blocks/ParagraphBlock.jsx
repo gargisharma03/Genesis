@@ -1,40 +1,32 @@
-export default function ParagraphBlock({
-    block,
-    onBlockChange,
-}) {
+import TextareaAutosize from "react-textarea-autosize";
 
-    return (
-
-        <textarea
-
-            value={block.content?.text || ""}
-
-            onChange={(e) =>
-                onBlockChange(
-                    block._id,
-                    {
-                        ...block.content,
-                        text: e.target.value,
-                    }
-                )
-            }
-
-            placeholder="Start writing..."
-
-            className="
-                w-full
-                resize-none
-                bg-transparent
-                outline-none
-                text-[15px]
-                leading-7
-                py-1
-            "
-
-            rows={2}
-
-        />
-
-    );
-
+export default function ParagraphBlock({ block, onBlockChange }) {
+  return (
+    <TextareaAutosize
+      value={block.content?.text || ""}
+      onChange={(e) =>
+        onBlockChange(block._id, {
+          ...block.content,
+          text: e.target.value,
+        })
+      }
+      placeholder="Start writing..."
+      minRows={1}
+      className="
+        w-full
+        block
+        resize-none
+        bg-transparent
+        outline-none
+        border-none
+        p-0
+        m-0
+        text-sm
+        leading-relaxed
+        text-zinc-800
+        placeholder:text-zinc-400/60
+        focus:ring-0
+      "
+    />
+  );
 }

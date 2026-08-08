@@ -42,7 +42,7 @@ export default function Laptop3DImage() {
         >
           {/* Base image element layer */}
           <img
-            src="/src/assets/dashboardmock.png"
+            src="/src/assets/workspacemock.png"
             alt="3D Visualization"
             className="h-full w-full object-cover transition-scale duration-500 group-hover:scale-105 select-none pointer-events-none"
           />

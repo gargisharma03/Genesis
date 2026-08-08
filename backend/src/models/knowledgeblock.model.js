@@ -50,6 +50,8 @@ const knowledgeBlockSchema = new mongoose.Schema(
       code: String,
       language: String,
       latex: String,
+      url: String,    
+      caption: String,
     },
     position: {
       x: { type: Number, default: 0 },

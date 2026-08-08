@@ -2,6 +2,7 @@ import express from "express";
 
 import {
   uploadPaper,
+  addPaperViaLink, // 👈 Added controller import
   getWorkspacePapers,
   getPaper,
   updatePaper,
@@ -10,6 +11,7 @@ import {
   favoritePaper,
   openPaper,
   deletePaper,
+  proxyArxivPdf
 } from "../controllers/paper.controller.js";
 
 import {
@@ -23,6 +25,8 @@ const router = express.Router({
   mergeParams: true,
 });
 
+
+
 /* ==========================================
    Global Middlewares
 ========================================== */
@@ -35,12 +39,19 @@ router.use(workspaceMiddleware);
    Paper Routes
 ========================================== */
 
-// Upload a paper
+// Upload a paper (File Upload)
 // POST /api/workspaces/:workspaceId/papers
 router.post(
   "/",
   uploadMiddleware.single("pdf"), // Must match the FormData field name
   uploadPaper
+);
+
+// Add a paper via Link / URL / DOI
+// POST /api/workspaces/:workspaceId/papers/link
+router.post(
+  "/link",
+  addPaperViaLink // 👈 New route handler
 );
 
 // Get all papers in a workspace

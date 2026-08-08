@@ -5,6 +5,7 @@ import {
   getKnowledgeBlocks,
   createKnowledgeBlock,
   updateBlock,
+  deleteBlock as deleteBlockApi,
   getOrCreatePaperBoard,
 } from "../../../api/knowledgeblockApi";
 
@@ -24,12 +25,15 @@ export default function ResearchBoard({ noteId, selectedPaper, currentPage = 1 }
 
   const paperId = selectedPaper?._id;
 
-  // Use refs to avoid stale closure issues in autosave callback
   const blocksRef = useRef(blocks);
-  blocksRef.current = blocks;
+  useEffect(() => {
+    blocksRef.current = blocks;
+  }, [blocks]);
 
   const activeNoteIdRef = useRef(activeNoteId);
-  activeNoteIdRef.current = activeNoteId;
+  useEffect(() => {
+    activeNoteIdRef.current = activeNoteId;
+  }, [activeNoteId]);
 
   const loadBoardData = useCallback(async () => {
     setLoading(true);
@@ -74,37 +78,65 @@ export default function ResearchBoard({ noteId, selectedPaper, currentPage = 1 }
     setDirtyBlock(blockId);
   };
 
-  const createBlock = async (type = "paragraph") => {
-    const blockType = typeof type === "string" ? type : "paragraph";
+const createBlock = async (type = "paragraph", afterBlockId = null) => {
+  const blockType = typeof type === "string" ? type : "paragraph";
 
-    if (!activeNoteId) {
-      console.error("Cannot create block: activeNoteId is null.");
-      return;
+  if (!activeNoteId) {
+    console.error("Cannot create block: activeNoteId is null.");
+    return;
+  }
+
+  try {
+    const payload = {
+      type: blockType,
+      title: "",
+      content: {
+        text: "",
+        code: "",
+        language: "javascript",
+        latex: "",
+        url: "",
+        caption: "",
+      },
+      position: { x: 100, y: 100, z: 1 },
+      linkedPaper: paperId || null,
+      linkedPage: currentPage || 1,
+    };
+
+    const res = await createKnowledgeBlock(workspaceId, activeNoteId, payload);
+    const newBlock = res.data?.block || res.block;
+
+    if (newBlock) {
+      setBlocks((prev) => {
+        if (!afterBlockId) {
+          // If no specific block ID was passed, append to the end
+          return [...prev, newBlock];
+        }
+
+        // Find index of the block where the '+' button was clicked
+        const index = prev.findIndex((b) => b._id === afterBlockId);
+        if (index === -1) return [...prev, newBlock];
+
+        // Insert new block directly after target index
+        const updated = [...prev];
+        updated.splice(index + 1, 0, newBlock);
+        return updated;
+      });
     }
+  } catch (err) {
+    console.error("Failed to create knowledge block:", err);
+  }
+};
+  const handleDeleteBlock = async (blockId) => {
+    if (!activeNoteId) return;
+
+    setBlocks((prev) => prev.filter((b) => b._id !== blockId));
 
     try {
-      const payload = {
-        type: blockType,
-        title: "",
-        content: {
-          text: "",
-          code: "",
-          language: "javascript",
-          latex: "",
-        },
-        position: { x: 100, y: 100, z: 1 },
-        linkedPaper: paperId || null,
-        linkedPage: currentPage || 1,
-      };
-
-      const res = await createKnowledgeBlock(workspaceId, activeNoteId, payload);
-      const newBlock = res.data?.block || res.block;
-
-      if (newBlock) {
-        setBlocks((prev) => [...prev, newBlock]);
-      }
+      await deleteBlockApi(workspaceId, activeNoteId, blockId);
     } catch (err) {
-      console.error("Failed to create knowledge block:", err);
+      console.error("Failed to delete block:", err);
+      loadBoardData();
     }
   };
 
@@ -136,13 +168,11 @@ export default function ResearchBoard({ noteId, selectedPaper, currentPage = 1 }
 
   return (
     <div className="flex h-full flex-col overflow-hidden rounded-2xl border bg-white">
-      {/* Fixed top controls */}
       <div className="shrink-0">
         <BoardHeader />
         <ResearchBoardToolbar onCreateBlock={createBlock} />
       </div>
 
-      {/* Scrollable container for the workspace */}
       <div className="min-h-0 flex-1 overflow-y-auto">
         {blocks.length === 0 ? (
           <EmptyBoard createBlock={createBlock} />
@@ -151,6 +181,7 @@ export default function ResearchBoard({ noteId, selectedPaper, currentPage = 1 }
             blocks={blocks}
             createBlock={createBlock}
             onBlockChange={handleBlockChange}
+            onDeleteBlock={handleDeleteBlock}
           />
         )}
       </div>

@@ -5,6 +5,7 @@ import userRouter from "./routes/user.routes.js";
 import workspaceRouter from "./routes/workspace.routes.js";
 import paperRouter from "./routes/paper.routes.js";
 import noteRouter from "./routes/note.routes.js";
+import { proxyArxivPdf } from "./controllers/paper.controller.js";
 
 const app = express();
 
@@ -17,6 +18,8 @@ app.use(express.json({ limit: "16kb" }));
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 app.use(express.static("public"));
 app.use(cookieParser());
+
+app.get("/api/papers/arxiv-proxy/:arxivId", proxyArxivPdf);
 
 app.use("/api/auth", userRouter);
 app.use("/api/workspaces", workspaceRouter);
@@ -33,5 +36,7 @@ app.use(
     "/api/workspaces/:workspaceId/papers/:paperId/notes",
     noteRouter
 );
+
+
 
 export { app };

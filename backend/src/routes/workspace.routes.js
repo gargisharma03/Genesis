@@ -7,6 +7,8 @@ import {
   getWorkspace,
   updateWorkspace,
   deleteWorkspace,
+  generateInviteLink,
+  joinWorkspaceViaInvite,
 } from "../controllers/workspace.controller.js";
 
 import {
@@ -20,8 +22,18 @@ router.post("/", authMiddleware, createWorkspace);
 
 router.get("/", authMiddleware, getUserWorkspaces);
 
-// ⭐ Must come BEFORE "/:workspaceId"
+
 router.get("/recent", authMiddleware, getRecentWorkspace);
+
+router.post("/join/:inviteCode", authMiddleware, joinWorkspaceViaInvite);
+
+// Generate invite link for a workspace
+router.post(
+  "/:workspaceId/invite",
+  authMiddleware,
+  workspaceMiddleware,
+  generateInviteLink
+);
 
 router.get(
   "/:workspaceId",

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { 
   Plus, 
@@ -31,19 +31,20 @@ export default function AddBlockDropdown({ onSelectType }) {
   const triggerRef = useRef(null);
   const dropdownRef = useRef(null);
 
-  const updateCoords = () => {
+  // Use Viewport coordinates for position: fixed
+  const updateCoords = useCallback(() => {
     if (triggerRef.current) {
       const rect = triggerRef.current.getBoundingClientRect();
       setCoords({
-        top: rect.bottom + window.scrollY + 8,
-        left: rect.left + window.scrollX,
+        top: rect.bottom + 8, // Directly use viewport top + offset
+        left: rect.left,      // Directly use viewport left
       });
     }
-  };
+  }, []);
 
   useEffect(() => {
     if (isOpen) updateCoords();
-  }, [isOpen]);
+  }, [isOpen, updateCoords]);
 
   useEffect(() => {
     function handleOutside(e) {
@@ -59,6 +60,7 @@ export default function AddBlockDropdown({ onSelectType }) {
 
     if (isOpen) {
       document.addEventListener("mousedown", handleOutside);
+      // Capture scroll on all nested containers (like overflow-y-auto elements)
       window.addEventListener("scroll", updateCoords, true);
       window.addEventListener("resize", updateCoords);
     }
@@ -68,7 +70,7 @@ export default function AddBlockDropdown({ onSelectType }) {
       window.removeEventListener("scroll", updateCoords, true);
       window.removeEventListener("resize", updateCoords);
     };
-  }, [isOpen]);
+  }, [isOpen, updateCoords]);
 
   const handleSelect = (typeId) => {
     onSelectType(typeId);
@@ -77,7 +79,7 @@ export default function AddBlockDropdown({ onSelectType }) {
 
   return (
     <div className="inline-block text-left">
-      {/* Trigger Button with Fuchsia Hover & Glow */}
+      {/* Trigger Button */}
       <button
         ref={triggerRef}
         onClick={() => setIsOpen((prev) => !prev)}
@@ -88,7 +90,7 @@ export default function AddBlockDropdown({ onSelectType }) {
         <ChevronDown className={`w-3.5 h-3.5 text-zinc-400 group-hover:text-fuchsia-400 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
       </button>
 
-      {/* Portal Dropdown in Fuchsia Dark Mode */}
+      {/* Portal Dropdown */}
       {isOpen &&
         createPortal(
           <div

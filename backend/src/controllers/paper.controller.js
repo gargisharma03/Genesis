@@ -6,6 +6,94 @@ import uploadToCloudinary from "../utils/uploadtocloudinary.js"
    Upload Paper
 ===================================================== */
 
+import slugify from "slugify";
+
+export const proxyArxivPdf = async (req, res) => {
+  try {
+    const { arxivId } = req.params;
+
+    // Validate arXiv ID format (e.g., 2402.06196 or old format physics/0307015)
+    if (!arxivId || !/^[a-zA-Z.-]+\/\d{7}$|^\d{4}\.\d{4,5}(v\d+)?$/.test(arxivId)) {
+      return res.status(400).json({ message: "Invalid arXiv ID format" });
+    }
+
+    const arxivPdfUrl = `https://arxiv.org/pdf/${arxivId}.pdf`;
+
+    const response = await fetch(arxivPdfUrl, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+      },
+    });
+
+    if (!response.ok) {
+      return res
+        .status(response.status)
+        .json({ message: "Failed to fetch PDF from arXiv" });
+    }
+
+    // Set standard PDF headers
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", `inline; filename="${arxivId}.pdf"`);
+
+    // Stream the PDF arrayBuffer to res (Node 18+)
+    const arrayBuffer = await response.arrayBuffer();
+    return res.send(Buffer.from(arrayBuffer));
+  } catch (error) {
+    console.error("Error proxying arXiv PDF:", error);
+    return res.status(500).json({ message: "Internal server error fetching PDF" });
+  }
+};
+
+export const addPaperViaLink = async (req, res) => {
+  try {
+    const { workspaceId } = req.params;
+    const { url, title, authors } = req.body;
+    const userId = req.user._id;
+
+    if (!url) {
+      return res.status(400).json({ success: false, message: "URL is required" });
+    }
+
+    // Determine source enum from URL
+    let source = "url";
+    if (url.includes("arxiv.org")) source = "arxiv";
+    else if (url.includes("doi.org")) source = "doi";
+
+    // Fallback title generation if not provided
+    const fallbackTitle = url.split("/").pop().replace(/\.pdf$/i, "") || "Untitled Research Paper";
+    const paperTitle = title || fallbackTitle;
+
+    // Generate unique slug
+    const generatedSlug = slugify(paperTitle, { lower: true, strict: true }) + "-" + Date.now().toString().slice(-4);
+
+    const paper = await Paper.create({
+      workspace: workspaceId,
+      uploadedBy: userId,
+      title: paperTitle,
+      authors: Array.isArray(authors) ? authors : authors ? [authors] : [],
+      pdfUrl: url,
+      pdfPublicId: `link_${Date.now()}`, // Satisfies required pdfPublicId schema constraint
+      source,
+      status: "ready", // Must be one of ["uploading", "processing", "ready", "failed", "archived"]
+      slug: generatedSlug,
+    });
+
+    // Update workspace timestamp
+    await Workspace.findByIdAndUpdate(workspaceId, { lastActivityAt: new Date() });
+
+    return res.status(201).json({
+      success: true,
+      message: "Paper added via link successfully",
+      paper,
+    });
+  } catch (error) {
+    console.error("Error adding paper via link:", error);
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Failed to add paper via link",
+    });
+  }
+};
 
 
 export const uploadPaper = async (req, res) => {
