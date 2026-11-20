@@ -1,7 +1,5 @@
 export const DB_NAME="genesis";
-// ======================================================
-// USER
-// ======================================================
+
 
 export const USER_ROLES = ["user", "admin"];
 
@@ -17,9 +15,7 @@ export const AUTH_PROVIDERS = [
   "github",
 ];
 
-// ======================================================
-// AVATAR COLORS
-// ======================================================
+
 
 export const AVATAR_COLORS = [
   "#4F46E5", // Indigo

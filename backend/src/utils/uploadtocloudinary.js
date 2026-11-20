@@ -5,7 +5,7 @@ const uploadToCloudinary = async (fileBuffer, folder = process.env.CLOUDINARY_PA
   return new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
       {
-        resource_type: "raw", // PDFs are uploaded as raw files
+        resource_type: "raw", 
         folder,
       },
       (error, result) => {

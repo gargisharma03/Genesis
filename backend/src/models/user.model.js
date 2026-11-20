@@ -144,18 +144,8 @@ const userSchema = new Schema(
   }
 );
 
-/* =====================================================
-   INDEXES
-===================================================== */
-
-
-
-
 userSchema.index({ lastWorkspace: 1 });
 
-/* =====================================================
-   VIRTUALS
-===================================================== */
 
 userSchema.virtual("initials").get(function () {
   if (!this.name) return "";
@@ -168,9 +158,6 @@ userSchema.virtual("initials").get(function () {
     .toUpperCase();
 });
 
-/* =====================================================
-   QUERY MIDDLEWARE
-===================================================== */
 
 userSchema.pre(/^find/, function () {
   this.where({
@@ -182,9 +169,7 @@ userSchema.pre(/^find/, function () {
   
 });
 
-/* =====================================================
-   PASSWORD HASHING
-===================================================== */
+
 
 userSchema.pre("save", async function () {
   if (!this.isModified("password")) {
@@ -195,9 +180,7 @@ userSchema.pre("save", async function () {
 
 });
 
-/* =====================================================
-   INSTANCE METHODS
-===================================================== */
+
 
 userSchema.methods.comparePassword = async function (enteredPassword) {
   if (!this.password) {

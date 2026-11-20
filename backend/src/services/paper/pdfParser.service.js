@@ -1,24 +1,44 @@
 import fs from "fs/promises";
-import pdfParse from "pdf-parse";
+import { PDFParse } from "pdf-parse";
 
 class PDFParserService {
-  async parsePDF(filePath) {
+  async parseBuffer(buffer) {
     try {
-      // Read PDF
-      const buffer = await fs.readFile(filePath);
+      if (!buffer || !Buffer.isBuffer(buffer)) {
+        throw new Error("PDF buffer is empty or invalid");
+      }
 
-      // Parse PDF
-      const pdf = await pdfParse(buffer);
+      const parser = new PDFParse({
+        data: buffer,
+      });
+
+      const result = await parser.getText();
+
+      await parser.destroy();
 
       return {
-        title: pdf.info?.Title || "",
-        author: pdf.info?.Author || "",
-        totalPages: pdf.numpages,
-        metadata: pdf.info || {},
-        fullText: pdf.text,
+        title: "",
+        author: "",
+        totalPages: result.total || 0,
+        metadata: {},
+        fullText: result.text || "",
       };
     } catch (error) {
-      throw new Error(`Failed to parse PDF: ${error.message}`);
+      throw new Error(
+        `Failed to parse PDF: ${error.message}`
+      );
+    }
+  }
+
+  async parsePDF(filePath) {
+    try {
+      const buffer = await fs.readFile(filePath);
+
+      return await this.parseBuffer(buffer);
+    } catch (error) {
+      throw new Error(
+        `Failed to parse PDF: ${error.message}`
+      );
     }
   }
 }

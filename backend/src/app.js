@@ -5,6 +5,10 @@ import userRouter from "./routes/user.routes.js";
 import workspaceRouter from "./routes/workspace.routes.js";
 import paperRouter from "./routes/paper.routes.js";
 import noteRouter from "./routes/note.routes.js";
+import paperAnalysisRouter from "./routes/paperAnalysis.routes.js";
+import synthesisMatrixRoutes
+  from "./routes/synthesisMatrix.routes.js";
+
 import { proxyArxivPdf } from "./controllers/paper.controller.js";
 
 const app = express();
@@ -35,6 +39,14 @@ app.use(
 app.use(
     "/api/workspaces/:workspaceId/papers/:paperId/notes",
     noteRouter
+);
+app.use(
+  "/api/paper-analysis",
+  paperAnalysisRouter
+);
+app.use(
+  "/api/synthesis-matrix",
+  synthesisMatrixRoutes
 );
 
 

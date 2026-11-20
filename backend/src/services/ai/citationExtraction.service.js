@@ -1,25 +1,37 @@
 class CitationExtractionService {
-  extract(text) {
-    // Locate the References section
-    const referencesIndex = text.search(/references/i);
 
-    if (referencesIndex === -1) {
+  extract(text) {
+    if (!text) {
       return [];
     }
 
-    const referencesText = text.slice(referencesIndex);
+    const referencesMatch = text.match(
+      /^\s*(references|bibliography)\s*$/im
+    );
 
-    // Split by numbered references
+    if (!referencesMatch) {
+      return [];
+    }
+
+    const referencesIndex =
+      referencesMatch.index;
+
+    const referencesText =
+      text.slice(referencesIndex);
+
     const rawCitations = referencesText
-      .split(/\n\s*\[\d+\]|\n\s*\d+\./)
-      .filter((citation) => citation.trim().length > 0);
+      .split(/\n\s*(?:\[\d+\]|\d+\.)\s+/)
+      .map((citation) => citation.trim())
+      .filter(Boolean);
 
-    return rawCitations.map((citation, index) => ({
-      referenceNumber: index + 1,
-      citationText: citation.trim(),
-      extractedBy: "ai",
-      verified: false,
-    }));
+    return rawCitations.map(
+      (citation, index) => ({
+        referenceNumber: index + 1,
+        citationText: citation,
+        extractedBy: "parser",
+        verified: false,
+      })
+    );
   }
 }
 

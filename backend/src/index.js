@@ -6,7 +6,7 @@ import connectDB from "./db/index.js";
 import { app } from "./app.js";
 import { setupSocketHandlers } from "./utils/socketHandler.js";
 
-// ✅ Changed default fallback port to 5000
+
 const PORT = process.env.PORT || 5000;
 
 const httpServer = createServer(app);
